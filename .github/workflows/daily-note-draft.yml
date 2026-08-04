@@ -1,8 +1,8 @@
-name: Daily Note Draft
+name: Weekly Note Draft
 
 on:
   schedule:
-    - cron: '47 21 * * *'  # 21:47 UTC = 06:47 JST (翌日、7時ちょうどの混雑を避けて13分前倒し)
+    - cron: '47 21 * * 0'  # 21:47 UTC 日曜 = 06:47 JST 月曜 (週1回、7時ちょうどの混雑を避けて13分前倒し)
   workflow_dispatch: {}   # 手動実行用(テストに使う)
 
 permissions:
