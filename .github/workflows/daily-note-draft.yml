@@ -1,0 +1,39 @@
+name: Daily Note Draft
+
+on:
+  schedule:
+    - cron: '0 22 * * *'  # 22:00 UTC = 07:00 JST (翌日)
+  workflow_dispatch: {}   # 手動実行用(テストに使う)
+
+permissions:
+  contents: write
+
+jobs:
+  generate-and-send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install anthropic requests
+
+      - name: Generate draft, image, and send email
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GMAIL_SENDER: ${{ secrets.GMAIL_SENDER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          GMAIL_RECIPIENT: ${{ secrets.GMAIL_RECIPIENT }}
+        run: python scripts/generate_and_send.py
+
+      - name: Commit updated theme history
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add state/used_themes.json
+          git diff --cached --quiet || git commit -m "chore: update used themes history"
+          git push
