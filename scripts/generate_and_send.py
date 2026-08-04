@@ -53,7 +53,7 @@ OUTPUT_SCHEMA = {
         "genre": {"type": "string", "enum": GENRES},
         "image_style": {"type": "string", "enum": IMAGE_STYLES},
         "title": {"type": "string"},
-        "alt_titles": {"type": "array", "items": {"type": "string"}, "minItems": 2, "maxItems": 2},
+        "alt_titles": {"type": "array", "items": {"type": "string"}, "description": "キャッチーなタイトル別案をちょうど2つ"},
         "lead": {"type": "string", "description": "無料部分のリード文"},
         "body_markdown": {
             "type": "string",
@@ -150,6 +150,7 @@ def generate_image(image_prompt: str) -> Path:
 
 
 def build_email_body(draft: dict) -> str:
+    alt_titles = "\n".join(f"{i}. {t}" for i, t in enumerate(draft["alt_titles"], 1))
     return f"""{draft['lead']}
 
 {draft['body_markdown']}
@@ -161,8 +162,7 @@ def build_email_body(draft: dict) -> str:
 {draft['price_reason']}
 
 --- タイトル別案 ---
-1. {draft['alt_titles'][0]}
-2. {draft['alt_titles'][1]}
+{alt_titles}
 
 --- 今回の記録(重複防止用) ---
 ジャンル: {draft['genre']} / 画像スタイル: {draft['image_style']}"""
