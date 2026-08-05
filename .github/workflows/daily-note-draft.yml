@@ -2,7 +2,7 @@ name: Weekly Note Draft
 
 on:
   schedule:
-    - cron: '47 21 * * 0'  # 21:47 UTC 日曜 = 06:47 JST 月曜 (週1回、7時ちょうどの混雑を避けて13分前倒し)
+    - cron: '47 12 * * 0'  # 12:47 UTC 日曜 = 21:47 JST 日曜 (9時間前倒し)
   workflow_dispatch: {}   # 手動実行用(テストに使う)
 
 permissions:
